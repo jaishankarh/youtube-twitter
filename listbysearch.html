@@ -3,9 +3,38 @@
   <head>
     <title>Search</title>
     <style type="text/css">
-    	.results-list{
+        input[id=query]{
+            width:40%;
+            padding: 1%;
+            
+            
+        }
+        button[id=search-button]{
+            padding: 1%;
+            
+        }
+/*
+        button[id=search-button]:hover{
+            background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(109,179,242,1)), color-stop(22%,rgba(117,190,249,1)), color-stop(65%,rgba(54,144,240,1)), color-stop(100%,rgba(30,105,222,1)));
+        }
+*/
+        .loading{
+                background: rgba( 255, 255, 255, .8 ) 
+                    url('imgs/ajax-loader.gif') 
+                    50% 50% 
+                    no-repeat;
+        }
+        .loading-big{
+                background: rgba( 255, 255, 255, .8 ) 
+                    url('imgs/ajax-loader-big.gif') 
+                    50% 50% 
+                    no-repeat;
+        }
+        
+    	.results-item{
     		margin: 10px;
     		cursor: pointer;
+            background-color: 
     	}
     	img {
     		margin: 5px;	
@@ -13,22 +42,34 @@
     	.thumbnail{
     		width: 100px;
     	}
+        #search-container{
+            background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(255,255,255,1)), color-stop(50%,rgba(241,241,241,1)), color-stop(51%,rgba(225,225,225,1)), color-stop(100%,rgba(246,246,246,1)));
+        }
     </style>
     <script type="text/javascript" src="swfobject.js"></script> 
   </head>
   <body>
-  	<div id="login-container" class="pre-auth">This application requires access to your YouTube account.
+  	<div id="twitter-container" class="pre-auth">This application requires access to your Twitter account.
+        Please <a href="twitter-login.php" id="twitter-login">authorize</a> to continue.
+    </div>
+    <div id="login-container" class="pre-auth">This application requires access to your YouTube account.
       Please <a href="#" id="login-link">authorize</a> to continue.
     </div>
-    <div id="buttons">
-      <label> <input id="query" type="text"/><button id="search-button" disabled onclick="search()">Search</button></label>
-    </div>
+    <div class="pre-auth" id="twitter-window"></div>
+    <center>
+        <div id="buttons">
+          <label> <input id="query" placeholder="Type in a search string..." type="text"/><button id="search-button" disabled onclick="search()">Search</button></label>
+        </div>
+    </center>
     <div id="search-container">
     </div>
     <a id="sec_player"></a>
-    <div id="video_player">
-    	
-    </div>
+    <center>
+        <div id="video_player">
+            
+
+        </div>
+    </center>
 
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
     <script src="auth_key.js"></script>
@@ -40,22 +81,35 @@
     	
     	
 
-    	$("#search-container").on("click",".results-list", function(){
+    	$("#search-container").on("click",".results-item", function(){
     		var id = $(this).attr("data-id");
-
+            var title = $(this).find("a").html();
     		swfobject.embedSWF("http://www.youtube.com/v/"+id+"?enablejsapi=1&playerapiid=ytplayer&version=3",
                        "video_player", "800", "600", "8", null, null, params, atts);
-    		$('html, body').animate({
-            		scrollTop: $("#video_player").offset().top
-        		}, 3000);
+//    		$('html, body').animate({
+//            		scrollTop: $("#video_player").offset().top
+//        		}, 3000);
+            $.get("tweet.php?title="+title, function(data) {
+                if(data == "true"){
+                    alert("Posted a tweet on your behalf");
+                    
+                }
+                else{
+                    alert(data);
+                }
+            });
     		
     	});
 
     	function onYouTubePlayerReady(playerId) {
       		ytplayer = document.getElementById("myytplayer");
     	}
-
-
+//        $("#twitter-login").click(function(){
+//            $.get("twitter-login.php", function(){
+//                alert();
+//            });
+//        });
+        
     </script>
   </body>
 </html>

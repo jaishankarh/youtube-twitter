@@ -9,6 +9,8 @@ var OAUTH2_SCOPES = [
 
 $(document).ready(function(){
   $('#login-link').click(function() {
+      $("#search-button").attr("class","loading");
+      //$("#search-button").html("");
       gapi.client.setApiKey(API_KEY);
       $('.pre-auth').hide();
       $('.post-auth').show();
